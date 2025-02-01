@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <h1>Convert Images to PDF</h1>
+            <p>Upload images to convert them into a single PDF document</p>
+        </header>
+
+        <div class="upload-container">
+            <!-- Input for selecting multiple images -->
+            <input type="file" id="fileInput" multiple accept="image/*">
+            <!-- Button to trigger the conversion process -->
+            <button id="convertButton" class="btn-primary">Convert to PDF</button>
+        </div>
+
+        <!-- Status message after conversion attempt -->
+        <div id="status" class="status-message"></div>
+
+        <!-- Section to download the converted PDF, hidden by default -->
+        <div id="download-section" class="download-container" style="display: none;">
+            <a id="downloadLink" href="#" download="output.pdf">
+                <button class="btn-download">Download PDF</button>
+            </a>
+        </div>
+
+        <!-- Footer with copyright information -->
+        <footer>
+            <p>&copy; 2025 Ayaz Alam. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Link to the JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
