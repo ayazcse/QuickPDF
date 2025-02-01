@@ -54,6 +54,8 @@
             font-size: 16px;
             border-radius: 5px;
             margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
         }
 
         #convertButton {
@@ -126,6 +128,40 @@
 
         .flicker-text {
             animation: flicker 1s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                font-size: 16px;
+            }
+
+            header {
+                font-size: 26px;
+            }
+
+            .upload-container {
+                padding: 10px;
+            }
+
+            #fileInput {
+                width: 80%;
+                max-width: 300px;
+            }
+
+            #convertButton {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            .btn-download {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            footer p {
+                font-size: 12px;
+            }
         }
     </style>
     <link rel="icon" href="favicon.ico">
