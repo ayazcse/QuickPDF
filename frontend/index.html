@@ -4,9 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image to PDF Converter</title>
-    <script src="script.js"></script>
-<link rel="stylesheet" href="styles.css">
-<link rel="icon" href="favicon.ico">
+    <style>
+        /* styles.css content */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            color: #333;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .upload-container {
+            margin-top: 20px;
+        }
+
+        #fileInput {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .download-container {
+            margin-top: 20px;
+        }
+
+        .btn-download {
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background-color: #007bb5;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+    <link rel="icon" href="favicon.ico">
 </head>
 <body>
     <div class="main-container">
@@ -38,5 +112,30 @@
         </footer>
     </div>
 
+    <script>
+        // script.js content
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const files = document.getElementById('fileInput').files;
+            const statusDiv = document.getElementById('status');
+            const downloadSection = document.getElementById('download-section');
+            const downloadLink = document.getElementById('downloadLink');
+
+            if (files.length === 0) {
+                statusDiv.textContent = 'Please select at least one image.';
+                return;
+            }
+
+            statusDiv.textContent = 'Converting images to PDF...';
+            
+            // Simulate PDF conversion (replace with actual logic)
+            setTimeout(() => {
+                statusDiv.textContent = 'Conversion successful!';
+                downloadSection.style.display = 'block';
+
+                // Set up the PDF download link (dummy URL for now)
+                downloadLink.href = 'path_to_your_generated_pdf/output.pdf';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
