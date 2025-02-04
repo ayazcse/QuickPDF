@@ -136,6 +136,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         document.getElementById('convertButton').addEventListener('click', function() {
             const files = document.getElementById('fileInput').files;
@@ -149,12 +150,35 @@
             }
 
             statusDiv.textContent = 'Converting images to PDF...';
-            
-            setTimeout(() => {
-                statusDiv.textContent = 'Conversion successful!';
-                downloadSection.style.display = 'block';
-                downloadLink.href = 'path_to_your_generated_pdf/output.pdf';
-            }, 2000);
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let imagesProcessed = 0;
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const imgData = event.target.result;
+
+                    if (index > 0) doc.addPage();
+                    doc.addImage(imgData, 'JPEG', 10, 10, 180, 160);
+
+                    imagesProcessed++;
+
+                    if (imagesProcessed === files.length) {
+                        statusDiv.textContent = 'Conversion successful!';
+                        downloadSection.style.display = 'block';
+
+                        const pdfOutput = doc.output('blob');
+                        const pdfURL = URL.createObjectURL(pdfOutput);
+                        downloadLink.href = pdfURL;
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            });
         });
     </script>
 </body>
