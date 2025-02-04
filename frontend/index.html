@@ -5,63 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image to PDF Converter</title>
     <style>
-        /* Advanced Hacker Aesthetic */
+        /* Instagram-Inspired Theme */
         body {
-            background-color: #0d0d0d;
-            color: #00ff99;
-            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-        }
-
-        .main-container {
-            width: 90%;
-            max-width: 800px;
             text-align: center;
-            padding: 30px;
-            border: 2px solid #00ff99;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.9);
-            box-shadow: 0 0 20px #00ff99;
-            animation: flickerBox 1.5s infinite alternate;
         }
 
-        @keyframes flickerBox {
-            0% { box-shadow: 0 0 10px #00ff99; }
-            100% { box-shadow: 0 0 20px #00ff99; }
-        }
-
-        header {
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid #00ff99;
-            width: fit-content;
-            margin: auto;
-            animation: typing 3s steps(40, end) infinite, blinkCursor 0.6s infinite;
-        }
-
-        @keyframes typing {
-            0% { width: 0; }
-            100% { width: 100%; }
-        }
-        @keyframes blinkCursor {
-            50% { border-color: transparent; }
-        }
-
-        .upload-container {
-            margin-top: 20px;
+        .container {
+            width: 90%;
+            max-width: 400px;
             padding: 20px;
-            border: 1px solid #00ff99;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #00ff99;
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         input[type='file'] {
@@ -69,69 +41,72 @@
         }
 
         .file-label {
-            padding: 12px 20px;
-            background-color: #00ff99;
-            color: #0d0d0d;
-            cursor: pointer;
-            border-radius: 5px;
             display: inline-block;
+            padding: 10px 20px;
+            background: #fcb045;
+            color: #000;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
             transition: 0.3s;
         }
 
         .file-label:hover {
-            background: #0d0d0d;
-            color: #00ff99;
-            box-shadow: 0 0 15px #00ff99;
+            background: #fd1d1d;
+            color: #fff;
         }
 
         .btn {
             margin-top: 15px;
-            padding: 12px 24px;
-            font-size: 18px;
-            background-color: transparent;
-            border: 2px solid #00ff99;
-            color: #00ff99;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
             cursor: pointer;
             border-radius: 5px;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            transition: 0.3s;
         }
 
         .btn:hover {
-            background: #00ff99;
-            color: #0d0d0d;
-            box-shadow: 0 0 20px #00ff99;
+            background: #fff;
+            color: #000;
         }
 
         .status-message {
-            margin-top: 15px;
-            font-size: 16px;
-            color: #66ffcc;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #fcb045;
         }
 
         .download-container {
             display: none;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
-        footer {
+        .contact-info {
             margin-top: 20px;
             font-size: 14px;
-            color: #66ffcc;
+            color: #ccc;
+        }
+
+        .art {
+            font-size: 14px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre;
+            color: #ff9a9e;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <header>Convert Images to PDF</header>
-        <p>Upload images to convert them into a single PDF document</p>
+    <div class="container">
+        <h1>📸 Convert Images to PDF 📜</h1>
+        <p>Upload images to convert them into a PDF</p>
 
-        <div class="upload-container">
-            <label for="fileInput" class="file-label">Choose Images</label>
-            <input type="file" id="fileInput" multiple accept="image/*">
-            <button class="btn" id="convertButton">Convert to PDF</button>
-        </div>
-
+        <label for="fileInput" class="file-label">Choose Images</label>
+        <input type="file" id="fileInput" multiple accept="image/*">
+        <button class="btn" id="convertButton">Convert to PDF</button>
         <div id="status" class="status-message"></div>
 
         <div id="download-section" class="download-container">
@@ -140,7 +115,16 @@
             </a>
         </div>
 
-        <footer>&copy; 2025 Ayaz Alam. All rights reserved.</footer>
+        <div class="contact-info">
+            <p>Created by Ayaz Alam 📌</p>
+            <p>Email: ayazalam2023@example.com</p>
+            <p>GitHub: github.com/ayazalam2023</p>
+            <p>LinkedIn: linkedin.com/in/ayaz-alam-ab0b69312</p>
+        </div>
+
+        <div class="art">
+            🌟🚀 Creative Minds | Code & Art 🎨💻
+        </div>
     </div>
 
     <script>
