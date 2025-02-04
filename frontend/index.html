@@ -136,49 +136,45 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        document.getElementById('convertButton').addEventListener('click', function() {
-            const files = document.getElementById('fileInput').files;
+        document.getElementById('convertButton').addEventListener('click', async function () {
+            const fileInput = document.getElementById('fileInput');
             const statusDiv = document.getElementById('status');
             const downloadSection = document.getElementById('download-section');
             const downloadLink = document.getElementById('downloadLink');
 
+            const files = fileInput.files;
             if (files.length === 0) {
                 statusDiv.textContent = 'Please select at least one image.';
                 return;
             }
 
-            statusDiv.textContent = 'Converting images to PDF...';
+            statusDiv.textContent = 'Uploading and converting images to PDF...';
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append("files", file);
+            }
 
-            let imagesProcessed = 0;
+            try {
+                const response = await fetch("/convert/", {
+                    method: "POST",
+                    body: formData
+                });
 
-            Array.from(files).forEach((file, index) => {
-                const reader = new FileReader();
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
 
-                reader.onload = function(event) {
-                    const imgData = event.target.result;
-
-                    if (index > 0) doc.addPage();
-                    doc.addImage(imgData, 'JPEG', 10, 10, 180, 160);
-
-                    imagesProcessed++;
-
-                    if (imagesProcessed === files.length) {
-                        statusDiv.textContent = 'Conversion successful!';
-                        downloadSection.style.display = 'block';
-
-                        const pdfOutput = doc.output('blob');
-                        const pdfURL = URL.createObjectURL(pdfOutput);
-                        downloadLink.href = pdfURL;
-                    }
-                };
-
-                reader.readAsDataURL(file);
-            });
+                const blob = await response.blob();
+                const pdfURL = URL.createObjectURL(blob);
+                downloadLink.href = pdfURL;
+                downloadSection.style.display = "block";
+                statusDiv.textContent = "Conversion successful! Download your PDF.";
+            } catch (error) {
+                console.error("Error:", error);
+                statusDiv.textContent = "Failed to convert images. Please try again.";
+            }
         });
     </script>
 </body>
