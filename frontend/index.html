@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickPDF - Image to PDF Converter</title>
     <style>
-        /* Instagram-Inspired Theme */
         body {
             background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
             color: #fff;
@@ -98,14 +97,6 @@
         .contact-info a:hover {
             color: #fd1d1d;
         }
-
-        .art {
-            font-size: 14px;
-            margin-top: 10px;
-            font-family: monospace;
-            white-space: pre;
-            color: #ff9a9e;
-        }
     </style>
 </head>
 <body>
@@ -124,58 +115,45 @@
             </a>
         </div>
 
-        <div class="contact-info">
-            <p>Created by <strong>Ayaz Alam</strong> 📌</p>
-            <p>Email: <a href="mailto:ayumallick7079@gmail.com">ayumallick7079@gmail.com</a></p>
-            <p>GitHub: <a href="https://github.com/ayazalam2023" target="_blank">github.com/ayazalam2023</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/ayaz-alam-ab0b69312" target="_blank">linkedin.com/in/ayaz-alam-ab0b69312</a></p>
-        </div>
+        <script>
+            document.getElementById('convertButton').addEventListener('click', async function() {
+                const files = document.getElementById('fileInput').files;
+                const statusDiv = document.getElementById('status');
+                const downloadSection = document.getElementById('download-section');
+                const downloadLink = document.getElementById('downloadLink');
 
-        <div class="art">
-            🌟🚀 Quick & Easy PDF Converter 🎨💻
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('convertButton').addEventListener('click', async function () {
-            const fileInput = document.getElementById('fileInput');
-            const statusDiv = document.getElementById('status');
-            const downloadSection = document.getElementById('download-section');
-            const downloadLink = document.getElementById('downloadLink');
-
-            const files = fileInput.files;
-            if (files.length === 0) {
-                statusDiv.textContent = 'Please select at least one image.';
-                return;
-            }
-
-            statusDiv.textContent = 'Uploading and converting images to PDF...';
-
-            const formData = new FormData();
-            for (const file of files) {
-                formData.append("files", file);
-            }
-
-            try {
-                const response = await fetch("/convert/", {
-                    method: "POST",
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.statusText}`);
+                if (files.length === 0) {
+                    statusDiv.textContent = 'Please select at least one image.';
+                    return;
                 }
 
-                const blob = await response.blob();
-                const pdfURL = URL.createObjectURL(blob);
-                downloadLink.href = pdfURL;
-                downloadSection.style.display = "block";
-                statusDiv.textContent = "Conversion successful! Download your PDF.";
-            } catch (error) {
-                console.error("Error:", error);
-                statusDiv.textContent = "Failed to convert images. Please try again.";
-            }
-        });
-    </script>
+                statusDiv.textContent = 'Converting images to PDF...';
+
+                const formData = new FormData();
+                for (const file of files) {
+                    formData.append('files', file);
+                }
+
+                try {
+                    const response = await fetch('/convert/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to convert images.');
+                    }
+
+                    const data = await response.json();
+                    statusDiv.textContent = 'Conversion successful!';
+                    downloadSection.style.display = 'block';
+
+                    downloadLink.href = data.download_url;
+                } catch (error) {
+                    statusDiv.textContent = 'Error: ' + error.message;
+                }
+            });
+        </script>
+    </div>
 </body>
 </html>
