@@ -12,8 +12,12 @@ app = FastAPI()
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Serve static files like HTML, CSS, JS
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# Serve static files like PDFs, HTML, CSS, and JS
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+
+# Ensure output PDF is stored in a publicly accessible directory
+OUTPUT_FOLDER = Path("frontend/static")
+OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
 
 @app.get("/")
 async def get_index():
@@ -31,43 +35,37 @@ async def convert_images_to_pdf(files: list[UploadFile] = File(...)):
         for file in files:
             logging.info(f"Processing file: {file.filename}")
 
-            # Check if the file is a valid image (JPEG, PNG, etc.)
+            # Validate image format
             if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
                 logging.warning(f"Invalid file type: {file.filename}")
                 raise HTTPException(status_code=400, detail=f"File '{file.filename}' is not a valid image format.")
 
             try:
-                # Open the image using PIL
+                # Open and convert the image
                 image = Image.open(file.file)
+                if image.mode != 'RGB':
+                    image = image.convert('RGB')
+
+                # Convert image to PDF
+                pdf_io = BytesIO()
+                image.save(pdf_io, format='PDF')
+                pdf_io.seek(0)
+                pdf_writer.append_pages_from_reader(PdfReader(pdf_io))
             except Exception as e:
-                logging.error(f"Failed to open image {file.filename}: {e}")
-                raise HTTPException(status_code=400, detail=f"Failed to open image {file.filename}. Please check the file format.")
+                logging.error(f"Failed to process image {file.filename}: {e}")
+                raise HTTPException(status_code=400, detail=f"Error processing {file.filename}")
 
-            # Convert the image to RGB if it’s not in RGB mode
-            if image.mode != 'RGB':
-                image = image.convert('RGB')
-
-            # Convert image to PDF and add to the PDF writer
-            pdf_io = BytesIO()
-            image.save(pdf_io, format='PDF')
-            pdf_io.seek(0)
-            pdf_writer.append_pages_from_reader(PdfReader(pdf_io))
-
-        # Ensure the "backend" directory exists (case-sensitive folder name)
-        output_dir = Path("backend")
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Save the generated PDF
-        output_path = output_dir / "output.pdf"
+        # Save the generated PDF in the frontend/static/ folder
+        output_path = OUTPUT_FOLDER / "output.pdf"
         with open(output_path, "wb") as pdf_file:
             pdf_writer.write(pdf_file)
 
         logging.info(f"PDF successfully created: {output_path}")
-        return FileResponse(output_path, media_type='application/pdf', filename="output.pdf")
+        return {"download_url": "/static/output.pdf"}
 
     except HTTPException as http_err:
         logging.error(f"HTTP Error: {http_err.detail}")
         raise http_err
     except Exception as e:
-        logging.error(f"Error during conversion: {e}", exc_info=True)
+        logging.error(f"Unexpected Error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to convert images. Please try again later.")
