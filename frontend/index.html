@@ -4,182 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickPDF - Image to PDF Converter</title>
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for rendering images to canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* Custom CSS for gradient background and font */
         body {
-            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', sans-serif;
+            /* Red and white theme gradient */
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 50%, #FFFFFF 100%);
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Arrange content vertically */
+            justify-content: space-between; /* Push header/footer to ends */
             align-items: center;
-            height: 100vh;
-            text-align: center;
+            min-height: 100vh; /* Ensure full viewport height */
+            margin: 0;
+            padding: 0; /* Remove body padding, use padding on inner containers */
+            box-sizing: border-box;
+            color: #fff; /* Default text color for body */
         }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+        /* Custom gradient for text - adapted for red/white theme */
+        .text-gradient-red {
+            background: linear-gradient(45deg, #FFD700, #FF4B2B); /* Gold to Red gradient */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* Hide default file input */
         input[type='file'] {
             display: none;
         }
 
-        .file-label {
+        /* Custom spinner for loading state */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
             display: inline-block;
-            padding: 10px 20px;
-            background: #fcb045;
-            color: #000;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+            vertical-align: middle;
+            margin-right: 8px;
         }
 
-        .file-label:hover {
-            background: #fd1d1d;
-            color: #fff;
-        }
-
-        .btn {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background: transparent;
-            border: 2px solid #fff;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: #fff;
-            color: #000;
-        }
-
-        .status-message {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #fcb045;
-        }
-
-        .download-container {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .contact-info {
-            margin-top: 20px;
-            font-size: 14px;
-        }
-
-        .contact-info a {
-            color: #fcb045;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .contact-info a:hover {
-            color: #fd1d1d;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>📸 QuickPDF - Convert Images to PDF 📜</h1>
-        <p>Upload images to convert them into a PDF</p>
-
-        <label for="fileInput" class="file-label">Choose Images</label>
-        <input type="file" id="fileInput" multiple accept="image/*">
-        <button class="btn" id="convertButton">Convert to PDF</button>
-        <div id="status" class="status-message"></div>
-
-        <div id="download-section" class="download-container">
-            <a id="downloadLink" href="#" download="output.pdf">
-                <button class="btn">Download PDF</button>
-            </a>
+<body class="antialiased">
+    <!-- Navbar -->
+    <nav class="w-full bg-red-800 bg-opacity-90 shadow-lg py-4 px-6 flex justify-between items-center z-10">
+        <div class="flex items-center">
+            <h2 class="text-2xl font-extrabold text-white">QuickPDF</h2>
+            <span class="ml-3 text-sm text-red-200 hidden sm:block">Your Instant Image to PDF Solution</span>
         </div>
-        <div class="contact-info">
-  <p>
-    "Created by "
-    <strong>Ayaz Alam</strong>
-    " 📌"
-  </p>
-  <p>
-    "Email: "
-    <a href="mailto:ayumallick7079@gmail.com">ayumallick7079@gmail.com</a>
-  </p>
-  <p>
-    "GitHub: "
-    <a href="https://github.com/ayazalam2023" target="_blank">github.com/ayazalam2023</a>
-  </p>
-  <p>
-    "LinkedIn: "
-    <a href="https://www.linkedin.com/in/ayaz-alam-ab0b69312" target="_blank">
-      linkedin.com/in/ayaz-alam-ab0b69312
-    </a>
-  </p>
-</div>
+        <div class="flex space-x-4">
+            <a href="#" class="text-white hover:text-red-200 transition duration-200 text-sm sm:text-base">Home</a>
+            <a href="#about" class="text-white hover:text-red-200 transition duration-200 text-sm sm:text-base">About</a>
+            <a href="#contact" class="text-white hover:text-red-200 transition duration-200 text-sm sm:text-base">Contact</a>
+        </div>
+    </nav>
 
-<div class="art">
-  🌟🚀 Quick & Easy PDF Converter 📄💻
-</div>
+    <!-- Main Content Container -->
+    <main class="flex-grow flex justify-center items-center w-full p-4 sm:p-6 lg:p-8">
+        <div class="container bg-gray-900 bg-opacity-80 p-6 sm:p-8 rounded-2xl shadow-2xl max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl w-full text-center text-white border border-red-500 transform transition-all duration-300 hover:scale-105">
+            <h1 class="text-3xl sm:text-4xl font-extrabold mb-4 text-gradient-red">
+                📸 QuickPDF - Convert Images to PDF 📜
+            </h1>
+            <p class="mb-6 text-gray-300 text-sm sm:text-base">Upload images to convert them into a single PDF document.</p>
 
+            <!-- File input and custom label -->
+            <label for="fileInput" class="file-label inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-red-500 to-red-700 text-white font-bold rounded-lg shadow-md hover:from-red-700 hover:to-red-500 transition duration-300 ease-in-out cursor-pointer transform hover:-translate-y-1 text-sm sm:text-base">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Choose Images
+            </label>
+            <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
 
-        <script>
-            document.getElementById('convertButton').addEventListener('click', async function() {
-                const files = document.getElementById('fileInput').files;
-                const statusDiv = document.getElementById('status');
-                const downloadSection = document.getElementById('download-section');
-                const downloadLink = document.getElementById('downloadLink');
+            <!-- Convert button -->
+            <button id="convertButton" class="btn mt-6 w-full px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center text-sm sm:text-base">
+                <span id="buttonText">Convert to PDF</span>
+            </button>
 
-                if (files.length === 0) {
-                    statusDiv.textContent = 'Please select at least one image.';
-                    return;
-                }
+            <!-- Status message -->
+            <div id="status" class="status-message mt-4 text-red-300 text-xs sm:text-sm"></div>
 
-                statusDiv.textContent = 'Converting images to PDF...';
+            <!-- Download section -->
+            <div id="download-section" class="download-container hidden mt-6">
+                <a id="downloadLink" href="#" download="quickpdf_output.pdf" class="block">
+                    <button class="btn w-full px-4 py-2 sm:px-6 sm:py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center text-sm sm:text-base">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l3-3m-3 3l-3-3m-4 8h10a2 2 0 002-2v-7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"></path></svg>
+                        Download PDF
+                    </button>
+                </a>
+            </div>
+        </div>
+    </main>
 
-                const formData = new FormData();
-                for (const file of files) {
-                    formData.append('files', file);
-                }
+    <!-- Footer with Contact Info -->
+    <footer id="about" class="w-full bg-gray-800 bg-opacity-90 py-6 px-6 text-gray-300 text-center text-sm sm:text-base mt-auto">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-left">
+            <div class="col-span-1">
+                <h3 class="font-bold text-red-300 mb-2 text-lg">About QuickPDF</h3>
+                <p class="text-gray-400">QuickPDF is a free, fast, and secure online tool to convert your images into a single PDF document directly in your browser. No uploads to servers, ensuring your privacy.</p>
+            </div>
+            <div id="contact" class="col-span-1">
+                <h3 class="font-bold text-red-300 mb-2 text-lg">Contact Developer</h3>
+                <p><strong>Ayaz Alam</strong> 📌</p>
+                <p>Email: <a href="mailto:ayumallick7079@gmail.com" class="text-red-400 hover:text-red-300 transition duration-200">ayumallick7079@gmail.com</a></p>
+            </div>
+            <div class="col-span-1">
+                <h3 class="font-bold text-red-300 mb-2 text-lg">Connect</h3>
+                <p>GitHub: <a href="https://github.com/ayazalam2023" target="_blank" class="text-red-400 hover:text-red-300 transition duration-200">github.com/ayazalam2023</a></p>
+                <p>LinkedIn: <a href="https://www.linkedin.com/in/ayaz-alam-ab0b69312" target="_blank" class="text-red-400 hover:text-red-300 transition duration-200">linkedin.com/in/ayaz-alam-ab0b69312</a></p>
+            </div>
+        </div>
+        <div class="art mt-6 text-lg text-red-300 animate-pulse">
+            🌟🚀 Quick & Easy PDF Converter 📄💻
+        </div>
+    </footer>
 
-                try {
-                    const response = await fetch('/convert/', {
-                        method: 'POST',
-                        body: formData
-                    });
+    <script type="module">
+        // Import jsPDF from the global window object
+        const { jsPDF } = window.jspdf;
 
-                    if (!response.ok) {
-                        throw new Error('Failed to convert images.');
+        document.getElementById('convertButton').addEventListener('click', async function() {
+            const files = document.getElementById('fileInput').files;
+            const statusDiv = document.getElementById('status');
+            const downloadSection = document.getElementById('download-section');
+            const downloadLink = document.getElementById('downloadLink');
+            const convertButton = document.getElementById('convertButton');
+            const buttonText = document.getElementById('buttonText');
+
+            // Reset UI
+            statusDiv.textContent = '';
+            downloadSection.classList.add('hidden');
+            convertButton.disabled = false;
+            buttonText.innerHTML = 'Convert to PDF';
+
+            if (files.length === 0) {
+                statusDiv.textContent = 'Please select at least one image.';
+                return;
+            }
+
+            // Show loading state
+            buttonText.innerHTML = '<span class="spinner"></span> Converting...';
+            convertButton.disabled = true;
+            statusDiv.textContent = 'Processing images... This might take a moment.';
+
+            try {
+                const doc = new jsPDF(); // Initialize jsPDF
+                let firstImage = true;
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    statusDiv.textContent = `Processing image ${i + 1} of ${files.length}...`;
+
+                    // Ensure file is an image
+                    if (!file.type.startsWith('image/')) {
+                        console.warn(`Skipping non-image file: ${file.name}`);
+                        continue;
                     }
 
-                    const data = await response.json();
-                    statusDiv.textContent = 'Conversion successful!';
-                    downloadSection.style.display = 'block';
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
 
-                    downloadLink.href = data.download_url;
-                } catch (error) {
-                    statusDiv.textContent = 'Error: ' + error.message;
+                    await new Promise((resolve, reject) => {
+                        reader.onload = async (e) => {
+                            const img = new Image();
+                            img.src = e.target.result;
+
+                            img.onload = async () => {
+                                if (!firstImage) {
+                                    doc.addPage(); // Add a new page for subsequent images
+                                } else {
+                                    firstImage = false;
+                                }
+
+                                // Calculate dimensions to fit image within PDF page
+                                const imgWidth = img.width;
+                                const imgHeight = img.height;
+                                const pdfWidth = doc.internal.pageSize.getWidth();
+                                const pdfHeight = doc.internal.pageSize.getHeight();
+
+                                let ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                                let finalWidth = imgWidth * ratio;
+                                let finalHeight = imgHeight * ratio;
+
+                                // Center the image on the page
+                                const x = (pdfWidth - finalWidth) / 2;
+                                const y = (pdfHeight - finalHeight) / 2;
+
+                                doc.addImage(img.src, 'JPEG', x, y, finalWidth, finalHeight);
+                                resolve();
+                            };
+                            img.onerror = reject;
+                        };
+                        reader.onerror = reject;
+                    });
                 }
-            });
-        </script>
-    </div>
+
+                // Generate PDF and create download link
+                const pdfBlob = doc.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+
+                downloadLink.href = pdfUrl;
+                downloadLink.download = 'quickpdf_output.pdf'; // Suggest a filename
+                downloadSection.classList.remove('hidden'); // Show download button
+
+                statusDiv.textContent = 'Conversion successful! Click "Download PDF" to save.';
+                buttonText.innerHTML = 'Convert to PDF';
+                convertButton.disabled = false;
+
+            } catch (error) {
+                console.error('Error during PDF conversion:', error);
+                statusDiv.textContent = 'Error: Failed to convert images to PDF. Please try again.';
+                buttonText.innerHTML = 'Convert to PDF';
+                convertButton.disabled = false;
+            }
+        });
+
+        // Update file label text when files are selected
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileLabel = document.querySelector('.file-label');
+            if (this.files.length > 0) {
+                fileLabel.innerHTML = `<svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${this.files.length} Image(s) Selected`;
+                document.getElementById('status').textContent = ''; // Clear status on new file selection
+                document.getElementById('download-section').classList.add('hidden'); // Hide download button
+            } else {
+                fileLabel.innerHTML = `<svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Choose Images`;
+            }
+        });
+    </script>
 </body>
 </html>
