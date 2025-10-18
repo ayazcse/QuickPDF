@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickPDF - Professional Converter</title>
-    <!-- Tailwind CSS CDN for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter for a clean, professional look -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- jsPDF for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- html2canvas for rendering images to canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         /* Custom CSS for a clean, professional aesthetic with a vibrant background */
@@ -31,7 +27,7 @@
             flex-direction: column;
             justify-content: flex-start; /* Aligns content to the top */
             align-items: stretch; /* Stretches items to fill the container */
-            color: #1F2937; /* Dark gray text */
+            color: #E5E7EB; /* Light gray text for dark theme default */
         }
         
         @keyframes gradient-animation {
@@ -67,7 +63,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Custom gradient button classes */
+        /* Custom gradient button classes (no change needed, they look good on dark) */
         .gradient-button {
             background-image: linear-gradient(45deg, #4F46E5, #EC4899);
             transition: all 0.3s ease-in-out;
@@ -90,44 +86,37 @@
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
-    <!-- Main Content Container with full-screen layout -->
     <main class="flex-grow flex justify-center items-center w-full p-4 sm:p-6 lg:p-8">
-        <div class="professional-card bg-white p-6 sm:p-10 rounded-xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl text-center">
+        <div class="professional-card bg-gray-900 p-6 sm:p-10 rounded-xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl text-center">
             <div class="mb-6">
-                <!-- Updated SVG icon with vibrant color -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-600 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-indigo-400 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="12" y1="12" x2="12" y2="18"></line>
                     <line x1="9" y1="15" x2="15" y2="15"></line>
                 </svg>
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                <h1 class="text-2xl sm:text-3xl font-bold text-white">
                     QuickPDF Converter
                 </h1>
-                <p class="mt-2 text-gray-500 text-sm sm:text-base">
+                <p class="mt-2 text-gray-400 text-sm sm:text-base">
                     Securely convert images to a single PDF document on your device.
                 </p>
             </div>
 
-            <!-- File input and custom label -->
-            <label for="fileInput" class="file-label inline-flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out cursor-pointer w-full text-sm sm:text-base">
+            <label for="fileInput" class="file-label inline-flex items-center justify-center px-6 py-3 bg-gray-800 text-gray-400 font-semibold rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out cursor-pointer w-full text-sm sm:text-base">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 Choose Images
             </label>
             <input type="file" id="fileInput" multiple accept="image/*" class="hidden">
 
-            <!-- Convert button with gradient colors -->
             <button id="convertButton" class="btn mt-4 w-full px-6 py-3 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center justify-center text-sm sm:text-base gradient-button">
                 <span id="buttonText">Convert to PDF</span>
             </button>
 
-            <!-- Status message -->
-            <div id="status" class="status-message mt-4 text-gray-600 text-xs sm:text-sm"></div>
+            <div id="status" class="status-message mt-4 text-gray-400 text-xs sm:text-sm"></div>
 
-            <!-- Download section -->
             <div id="download-section" class="download-container hidden mt-6">
                 <a id="downloadLink" href="#" download="quickpdf_output.pdf" class="block">
-                    <!-- Download button with different gradient colors -->
                     <button class="btn w-full px-6 py-3 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 flex items-center justify-center text-sm sm:text-base gradient-download-button">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l3-3m-3 3l-3-3m-4 8h10a2 2 0 002-2v-7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"></path></svg>
                         Download PDF
@@ -137,8 +126,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full py-6 px-6 text-gray-500 text-center text-xs sm:text-sm">
+    <footer class="w-full py-6 px-6 text-gray-200 text-center text-xs sm:text-sm">
         <p>&copy; 2025 QuickPDF. All rights reserved. | Developed by Ayaz Alam</p>
     </footer>
 
@@ -192,7 +180,7 @@
                             const img = new Image();
                             img.src = e.target.result;
 
-                            img.onload = async () => {
+                            img.onload = async (). => {
                                 if (!firstImage) {
                                     doc.addPage(); // Add a new page for subsequent images
                                 } else {
@@ -246,7 +234,7 @@
         document.getElementById('fileInput').addEventListener('change', function() {
             const fileLabel = document.querySelector('.file-label');
             if (this.files.length > 0) {
-                fileLabel.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${this.files.length} Image(s) Selected`;
+                fileLabel.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${this.files.routes.length} Image(s) Selected`;
                 document.getElementById('status').textContent = ''; // Clear status on new file selection
                 document.getElementById('download-section').classList.add('hidden'); // Hide download button
             } else {
